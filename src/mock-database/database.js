@@ -1,7 +1,9 @@
 import { COMMAND_KEYWORDS, RESULT } from "./const";
+import { cloneDeep } from "lodash";
 
 
-const database = {}
+const database = {};
+const snapshot = {};
 
 
 const add = (key, value) => {
@@ -79,6 +81,18 @@ const setExpire = (key, time) => {
 }
 
 
+const saveSnapshot = () => {
+    snapshot = cloneDeep(database);
+    return RESULT.SUCCESS;
+}
+
+
+const restore = () => {
+    database = cloneDeep(snapshot);
+    return RESULT.SUCCESS;
+}
+
+
 const processCommand = (command) => {
 
     let result = RESULT.ERROR;
@@ -124,6 +138,14 @@ const processCommand = (command) => {
 
             case COMMAND_KEYWORDS.TTL:
                 result = getExpireKey(commandEles[1]);
+                break;
+
+            case COMMAND_KEYWORDS.SAVE:
+                result = saveSnapshot();
+                break;
+
+            case COMMAND_KEYWORDS.RESTORE:
+                result = restore();
                 break;
     
             default:
