@@ -10,7 +10,7 @@ import { ref } from '@vue/reactivity'
 import CommandLine from "./components/CommandLine.vue"
 import Line from "./components/Line.vue"
 
-import processCommand from "./logic/processCommand"
+import { processCommand } from "./mock-database/database"
 
 export default {
 
@@ -25,16 +25,10 @@ export default {
 		
 		const lines = ref([]);
 
-		const database = ref({
-
-		});
-
 		const handleCommandSubmit = ( newCommand ) => {
 			lines.value.push("> " + newCommand);
-			let { result, newDatabaseValue } = processCommand(newCommand, database.value);
-			console.log("from App.vue", database.value);
+			let result = processCommand(newCommand);
 			lines.value.push(result);
-			database.value = newDatabaseValue;
 		}
 
 		return {
