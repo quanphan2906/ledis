@@ -9,16 +9,19 @@ const add = (key, value) => {
         value = new Set(value);
     }
 
-    database[key] = value;
+    database[key] = {
+        timeOut: null,
+        value: value,
+    };
 
     return RESULT.SUCCESS;
 }
 
 
 const getString = (key) => {
-    if ( key in database && typeof database[key] !== "object" ) {
+    if ( key in database && typeof database[key].value !== "object" ) {
 
-        return database[key];
+        return database[key].value;
     } else throw RESULT.ERROR;
 }
 
@@ -27,18 +30,18 @@ const deleteFromSet = (key, values) => {
     if ( key in database ) {
 
         for (let value of values) {
-            database[key] = database[key].delete(value);
+            database[key].value.delete(value);
         }
 
-        return database[key];
+        return Array.from(database[key].value);
     } else throw RESULT.ERROR;
 }
 
 
 const getSet = (key) => {
-    if ( key in database & typeof database[key] == "object" ) {
+    if ( key in database & typeof database[key].value === "object" ) {
 
-        return Array.from(database[key]);
+        return Array.from(database[key].value);
     } else throw RESULT.ERROR;
 }
 
