@@ -46,6 +46,39 @@ const getSet = (key) => {
 }
 
 
+const getKeys = () => {
+
+    return Array.from(Object.keys(database));
+}
+
+
+const deleteKey = (key) => {
+    if ( key in database ) {
+
+        delete database[key];
+        return RESULT.SUCCESS;
+
+    } else throw RESULT.ERROR;
+}
+
+
+const getExpireKey = (key) => {
+    if ( key in database ) {
+
+        return database[key].timeOut === null ? ('None') : database[key].timeOut;
+    } else throw RESULT.ERROR;
+}
+
+
+const setExpire = (key, time) => {
+    if ( key in database ) {
+
+        database[key].timeOut = time;
+        return RESULT.SUCCESS; 
+    } else throw RESULT.ERROR;
+}
+
+
 const processCommand = (command) => {
 
     let result = RESULT.ERROR;
@@ -76,12 +109,30 @@ const processCommand = (command) => {
             case COMMAND_KEYWORDS.SMEMBERS:
                 result = getSet(commandEles[1]);
                 break;
+
+            case COMMAND_KEYWORDS.KEYS:
+                result = getKeys();
+                break;
+
+            case COMMAND_KEYWORDS.DEL:
+                result = deleteKey(commandEles[1]);
+                break;
+
+            case COMMAND_KEYWORDS.EXPIRE:
+                result = setExpire(commandEles[1], commandEles[2]);
+                break;
+
+            case COMMAND_KEYWORDS.TTL:
+                result = getExpireKey(commandEles[1]);
+                break;
     
             default:
-                {}
+                result = RESULT.ERROR;
         }
 
-    } catch {}
+    } catch {
+        result = RESULT.ERROR;
+    }
 
     return result;
 };
