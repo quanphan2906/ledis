@@ -1,30 +1,77 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+	<div class="results-wrapper">
+		<Line v-for="line in lines" :text="line" />
+	</div>
+	<CommandLine @submit-command="handleCommandSubmit" />
 </template>
 
+<script>
+import { ref } from '@vue/reactivity'
+import CommandLine from "./components/CommandLine.vue"
+import Line from "./components/Line.vue"
+
+import processCommand from "./logic/processCommand"
+
+export default {
+
+	name: "App",
+
+	components: {
+		CommandLine,
+		Line
+	},
+
+	setup() {
+		
+		const lines = ref([]);
+
+		const database = ref({
+
+		});
+
+		const handleCommandSubmit = ( newCommand ) => {
+			lines.value.push("> " + newCommand);
+			let { result, newDatabaseValue } = processCommand(newCommand, database.value);
+			console.log("from App.vue", database.value);
+			lines.value.push(result);
+			database.value = newDatabaseValue;
+		}
+
+		return {
+			lines,
+			handleCommandSubmit,
+		}
+	},
+}
+
+
+</script>
+
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+	font-family: 'Source Code Pro', monospace;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+body {
+	margin: 0;
+	height: 100%;
+	width: 100%;
+    font-size: 1.2rem;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+input[type="text"]
+{
+    font-family: 'Source Code Pro', monospace;
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+.results-wrapper {
+	height: 85vh;
+	overflow-y: scroll;
 }
+
 </style>
