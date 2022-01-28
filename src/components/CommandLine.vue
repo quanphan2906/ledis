@@ -1,6 +1,6 @@
 <template>
     <div class="console">
-        <form @submit="submitCommand">
+        <form @submit.prevent="submitCommand">
             <input type="text" v-model="command" />
         </form>
     </div>
@@ -19,8 +19,7 @@ export default {
         
         const command = ref("");
 
-        const submitCommand = (e) => {
-            e.preventDefault();
+        const submitCommand = () => {
             emit("submit-command", command.value);
             command.value = "";
         }

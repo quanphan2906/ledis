@@ -6,14 +6,10 @@ var database = {};
 var snapshot = {};
 
 
-const add = (key, value) => {
+const addString = (key, value) => {
 
     if ( key == null || value == null ) {
         return RESULT.INVALID_USAGE;
-    }
-
-    if ( Array.isArray(value) ) {
-        value = new Set(value);
     }
 
     database[key] = {
@@ -29,7 +25,42 @@ const getString = (key) => {
     if ( key in database && typeof database[key].value !== "object" ) {
 
         return database[key].value;
-    } else throw RESULT.KEY_ERROR;
+    } else throw (key == null) ? RESULT.INVALID_USAGE : RESULT.KEY_ERROR;
+}
+
+
+const addSet = (key, values) => {
+    if ( key in database && values.length != 0 ) {
+        
+        const newSet = new Set(values);
+
+        if (typeof database[key].value !== "object") {
+
+            database[key] = {
+                timeOut: null,
+                value: newSet,
+            }
+            
+        } else {
+
+            const oldSet = database[key].value;
+            oldSet.forEach(newSet.add, newSet);
+            database[key].value = newSet;
+        }
+
+        return RESULT.SUCCESS;
+
+    } else {
+
+        if (key == null) {
+            throw RESULT.KEY_ERROR;
+        }
+
+        if (values.length == 0) {
+            throw RESULT.INVALID_USAGE;
+        }
+
+    };
 }
 
 
@@ -126,6 +157,13 @@ const restore = () => {
 }
 
 
+const reset = () => {
+    database = {};
+    snapshot = {};
+    return RESULT.SUCCESS;
+}
+
+
 const processCommand = (command) => {
 
     let result = RESULT.KEY_ERROR;
@@ -138,7 +176,7 @@ const processCommand = (command) => {
         switch (keyword) {
 
             case COMMAND_KEYWORDS.SET:
-                result = add(commandEles[1], commandEles[2]);
+                result = addString(commandEles[1], commandEles[2]);
                 break;
     
             case COMMAND_KEYWORDS.GET:
@@ -146,7 +184,7 @@ const processCommand = (command) => {
                 break;
     
             case COMMAND_KEYWORDS.SADD:
-                result = add(commandEles[1], commandEles.slice(2));
+                result = addSet(commandEles[1], commandEles.slice(2));
                 break;
     
             case COMMAND_KEYWORDS.SREM:
@@ -183,6 +221,10 @@ const processCommand = (command) => {
 
             case COMMAND_KEYWORDS.RESTORE:
                 result = restore();
+                break;
+
+            case COMMAND_KEYWORDS.RESET:
+                result = reset();
                 break;
     
             default:

@@ -12,6 +12,7 @@ const COMMAND_KEYWORDS = {
     TTL: "TTL",
     SAVE: "SAVE",
     RESTORE: "RESTORE",
+    RESET: "RESET",
 
 }
 

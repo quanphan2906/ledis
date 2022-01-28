@@ -30,6 +30,10 @@ There are two reasons why I save the state of the app into a JS variable instead
 1. I want the mock server to resemble a real server as much as possible, and an app with a back-end server will not save its database live in the front-end.
 2. I have already had a reactive object (`result`) in the `App` component to determine what should be rendered in the `Line` component(s) and when `App` should re-render, so declaring another reactive object to serve as a database is redundant.
 
+# Syntax assumption
+
+If you do not pass enough, it will throw Error. If you pass more arguments than required, only the first arguments are used. (**TODO**: Polish this).
+
 # What is added?
 
 1. The keys will actually expired after a timeout is set on a key.
