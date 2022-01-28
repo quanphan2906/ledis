@@ -2,8 +2,8 @@ import { COMMAND_KEYWORDS, RESULT } from "./const";
 import { cloneDeep } from "lodash";
 
 
-const database = {};
-const snapshot = {};
+var database = {};
+var snapshot = {};
 
 
 const add = (key, value) => {
@@ -48,6 +48,30 @@ const getSet = (key) => {
 }
 
 
+const setIntersect = (keys) => {
+
+    let intersection = new Set([]);
+
+    for (let key of keys) {
+
+        if ( key in database && typeof database[key].value === "object" ) {
+
+            let set = database[key].value;
+
+            if (intersection.size === 0) {
+
+                intersection = set;
+            } else {
+
+                intersection = new Set([...intersection].filter(i => set.has(i)));
+            }
+        }
+    }
+
+    return Array.from(intersection);
+}
+
+
 const getKeys = () => {
 
     return Array.from(Object.keys(database));
@@ -89,6 +113,7 @@ const saveSnapshot = () => {
 
 const restore = () => {
     database = cloneDeep(snapshot);
+    snapshot = {};
     return RESULT.SUCCESS;
 }
 
@@ -122,6 +147,10 @@ const processCommand = (command) => {
     
             case COMMAND_KEYWORDS.SMEMBERS:
                 result = getSet(commandEles[1]);
+                break;
+
+            case COMMAND_KEYWORDS.SINTER:
+                result = setIntersect(commandEles.slice(1));
                 break;
 
             case COMMAND_KEYWORDS.KEYS:
