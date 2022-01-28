@@ -105,6 +105,9 @@ const setExpire = (key, time) => {
     if ( key in database ) {
 
         database[key].timeOut = time;
+        
+        setTimeout(() => deleteKey(time), time);
+
         return RESULT.SUCCESS; 
     } else throw RESULT.KEY_ERROR;
 }
