@@ -7,6 +7,11 @@ var snapshot = {};
 
 
 const add = (key, value) => {
+
+    if ( key == null || value == null ) {
+        return RESULT.INVALID_USAGE;
+    }
+
     if ( Array.isArray(value) ) {
         value = new Set(value);
     }
@@ -24,7 +29,7 @@ const getString = (key) => {
     if ( key in database && typeof database[key].value !== "object" ) {
 
         return database[key].value;
-    } else throw RESULT.ERROR;
+    } else throw RESULT.KEY_ERROR;
 }
 
 
@@ -36,7 +41,7 @@ const deleteFromSet = (key, values) => {
         }
 
         return Array.from(database[key].value);
-    } else throw RESULT.ERROR;
+    } else throw RESULT.KEY_ERROR;
 }
 
 
@@ -44,7 +49,7 @@ const getSet = (key) => {
     if ( key in database & typeof database[key].value === "object" ) {
 
         return Array.from(database[key].value);
-    } else throw RESULT.ERROR;
+    } else throw RESULT.KEY_ERROR;
 }
 
 
@@ -84,15 +89,15 @@ const deleteKey = (key) => {
         delete database[key];
         return RESULT.SUCCESS;
 
-    } else throw RESULT.ERROR;
+    } else throw RESULT.KEY_ERROR;
 }
 
 
-const getExpireKey = (key) => {
+const getExpirationTime = (key) => {
     if ( key in database ) {
 
         return database[key].timeOut === null ? ('None') : database[key].timeOut;
-    } else throw RESULT.ERROR;
+    } else throw RESULT.KEY_ERROR;
 }
 
 
@@ -101,7 +106,7 @@ const setExpire = (key, time) => {
 
         database[key].timeOut = time;
         return RESULT.SUCCESS; 
-    } else throw RESULT.ERROR;
+    } else throw RESULT.KEY_ERROR;
 }
 
 
@@ -120,7 +125,7 @@ const restore = () => {
 
 const processCommand = (command) => {
 
-    let result = RESULT.ERROR;
+    let result = RESULT.KEY_ERROR;
 
     const commandEles = command.trim().replace(/\s+/g, " ").split(" ");
     const keyword = commandEles[0];
@@ -166,7 +171,7 @@ const processCommand = (command) => {
                 break;
 
             case COMMAND_KEYWORDS.TTL:
-                result = getExpireKey(commandEles[1]);
+                result = getExpirationTime(commandEles[1]);
                 break;
 
             case COMMAND_KEYWORDS.SAVE:
@@ -178,11 +183,11 @@ const processCommand = (command) => {
                 break;
     
             default:
-                result = RESULT.ERROR;
+                result = RESULT.COMMAND_ERROR;
         }
 
-    } catch {
-        result = RESULT.ERROR;
+    } catch (e) {
+        result = e;
     }
 
     return result;

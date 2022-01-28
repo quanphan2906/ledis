@@ -17,7 +17,9 @@ const COMMAND_KEYWORDS = {
 
 const RESULT = {
     SUCCESS: "Success",
-    ERROR: "ERROR: Key not found",
+    KEY_ERROR: "ERROR: Key not found",
+    COMMAND_ERROR: "ERROR: Command not valid",
+    INVALID_USAGE: "ERROR: Arguments of command are invalid or not enough",
 }
 
 export { COMMAND_KEYWORDS, RESULT }
