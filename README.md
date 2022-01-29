@@ -39,7 +39,7 @@ There are two reasons why I save the state of the app into a JS variable instead
 
 # What did I learn?
 
-This is my _first_ time writing tests for a Vue application. I used `vue-test-utils` and `jest`. I learnt how to conduct unit testing with each component in the Vue application, and each function in the mock server.
+This is my _first_ time writing tests for a Vue application. I used `vue-test-utils` and `jest`. I learnt how to conduct unit testing with each component in the Vue application, and with each function in the mock server.
 
 # Notes
 
