@@ -16,6 +16,7 @@ describe("CommandLine.vue", () => {
         await form.trigger("submit.prevent");
     
         expect(wrapper.emitted()).toHaveProperty("submit-command");
+        // Test whether it sends along the data
         expect(textInput.element.value).toBe("");
     })
 

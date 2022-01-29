@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.20.3",
+    "jest": "^24.9.0",
     "lodash": "^4.17.21",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0"

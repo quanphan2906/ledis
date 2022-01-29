@@ -1,5 +1,5 @@
 import { COMMAND_KEYWORDS, RESULT } from "./const";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 
 
 var database = {};
@@ -17,70 +17,87 @@ const addString = (key, value) => {
         value: value,
     };
 
-    return RESULT.SUCCESS;
+    return RESULT.OK;
 }
 
 
 const getString = (key) => {
-    if ( key in database && typeof database[key].value !== "object" ) {
 
-        return database[key].value;
-    } else throw (key == null) ? RESULT.INVALID_USAGE : RESULT.KEY_ERROR;
+    if (key == null) {
+        return RESULT.INVALID_USAGE;
+    }
+
+    if ( !(key in database) || typeof database[key].value === "object" ) {
+        return RESULT.KEY_ERROR;
+    }
+
+    return database[key].value;
 }
 
 
 const addSet = (key, values) => {
-    if ( key in database && values.length != 0 ) {
-        
-        const newSet = new Set(values);
+    
+    if (key == null || values.length == 0) {
+        return RESULT.INVALID_USAGE;
+    }
 
-        if (typeof database[key].value !== "object") {
+    const newSet = new Set(values);
 
-            database[key] = {
-                timeOut: null,
-                value: newSet,
-            }
-            
-        } else {
+    if ( key in database ) {
 
-            const oldSet = database[key].value;
-            oldSet.forEach(newSet.add, newSet);
-            database[key].value = newSet;
+        if ( typeof database[key].value !== "object" ) {
+            return RESULT.NOT_SET;
         }
 
-        return RESULT.SUCCESS;
 
-    } else {
+        const oldSet = database[key].value;
+        oldSet.forEach(newSet.add, newSet);
+        database[key].value = newSet;
 
-        if (key == null) {
-            throw RESULT.KEY_ERROR;
-        }
+        return newSet.size - oldSet.size;
+    }
 
-        if (values.length == 0) {
-            throw RESULT.INVALID_USAGE;
-        }
-
+    database[key] = {
+        timeOut: null,
+        value: newSet,
     };
+
+    return newSet.size;
 }
 
 
 const deleteFromSet = (key, values) => {
-    if ( key in database ) {
+    if (key == null) {
+        return RESULT.INVALID_USAGE;
+    }
 
-        for (let value of values) {
-            database[key].value.delete(value);
-        }
+    if ( !(key in database) ) {
+        return 0;
+    }
 
-        return Array.from(database[key].value);
-    } else throw RESULT.KEY_ERROR;
+    const oldSetSize = database[key].value.size;
+
+    for (let value of values) {
+        database[key].value.delete(value);
+    }
+    
+    const newSetSize = database[key].value.size;
+
+    return oldSetSize - newSetSize;
 }
 
 
 const getSet = (key) => {
-    if ( key in database & typeof database[key].value === "object" ) {
 
-        return Array.from(database[key].value);
-    } else throw RESULT.KEY_ERROR;
+    if ( key == null ) {
+        return RESULT.INVALID_USAGE;
+    }
+
+    if ( !(key in database) || typeof database[key].value !== "object" ) {
+        return RESULT.EMPTY_SET;
+    }
+
+    return Array.from(database[key].value);
 }
 
 
@@ -94,13 +111,15 @@ const setIntersect = (keys) => {
 
             let set = database[key].value;
 
-            if (intersection.size === 0) {
-
+            if (intersection.size == 0) {
                 intersection = set;
             } else {
 
                 intersection = new Set([...intersection].filter(i => set.has(i)));
             }
+        } else {
+
+            return [];
         }
     }
 
@@ -115,52 +134,71 @@ const getKeys = () => {
 
 
 const deleteKey = (key) => {
-    if ( key in database ) {
 
-        delete database[key];
-        return RESULT.SUCCESS;
+    if ( !(key in database) ) {
+        return RESULT.KEY_ERROR;
+    }
 
-    } else throw RESULT.KEY_ERROR;
+    delete database[key];
+    return RESULT.OK;    
 }
 
 
 const getExpirationTime = (key) => {
-    if ( key in database ) {
 
-        return database[key].timeOut === null ? ('None') : database[key].timeOut;
-    } else throw RESULT.KEY_ERROR;
+    if ( !(key in database) ) {
+        return RESULT.KEY_ERROR;
+    }
+
+    return database[key].timeOut === null ? ('None') : database[key].timeOut;
 }
 
 
 const setExpire = (key, time) => {
+
+    if ( !(key in database) ) {
+        return RESULT.KEY_ERROR;
+    }
+
+    const timeInt = parseInt(time, 10);
+
+    if ( isNaN(timeInt) ) {
+        return RESULT.INVALID_USAGE;
+    }
+
     if ( key in database ) {
 
-        database[key].timeOut = time;
+        database[key].timeOut = timeInt;
         
-        setTimeout(() => deleteKey(time), time);
+        setTimeout(() => deleteKey(key), timeInt * 1000);
 
-        return RESULT.SUCCESS; 
-    } else throw RESULT.KEY_ERROR;
+        return timeInt;
+    }
 }
 
 
 const saveSnapshot = () => {
     snapshot = cloneDeep(database);
-    return RESULT.SUCCESS;
+    return RESULT.OK;
 }
 
 
 const restore = () => {
+    
+    if ( isEmpty(snapshot) ) {
+        return RESULT.EMPTY_SNAPSHOT;
+    }
+
     database = cloneDeep(snapshot);
     snapshot = {};
-    return RESULT.SUCCESS;
+    return RESULT.OK;
 }
 
 
 const reset = () => {
     database = {};
     snapshot = {};
-    return RESULT.SUCCESS;
+    return RESULT.OK;
 }
 
 

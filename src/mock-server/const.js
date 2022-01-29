@@ -17,10 +17,13 @@ const COMMAND_KEYWORDS = {
 }
 
 const RESULT = {
-    SUCCESS: "Success",
+    OK: "OK",
     KEY_ERROR: "ERROR: Key not found",
-    COMMAND_ERROR: "ERROR: Command not valid",
+    COMMAND_ERROR: "ERROR: Unknown command",
     INVALID_USAGE: "ERROR: Arguments of command are invalid or not enough",
+    EMPTY_SNAPSHOT: "ERROR: There has not been any snapshot yet",
+    NOT_SET: "ERROR: Value at key is not a set",
+    EMPTY_SET: "ERROR: Empty set",
 }
 
 export { COMMAND_KEYWORDS, RESULT }
