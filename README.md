@@ -1,6 +1,6 @@
 # Ledis
 
-A simple, light-weight version of Redis. Built with Vue 3.
+A simple, light-weight version of Redis. Built with Vue 3. Check out the app here: https://ledis-quanphan.netlify.app/.
 
 # Design
 
