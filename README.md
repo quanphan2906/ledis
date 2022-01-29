@@ -30,14 +30,25 @@ There are two reasons why I save the state of the app into a JS variable instead
 1. I want the mock server to resemble a real server as much as possible, and an app with a back-end server will not save its database live in the front-end.
 2. I have already had a reactive object (`result`) in the `App` component to determine what should be rendered in the `Line` component(s) and when `App` should re-render, so declaring another reactive object to serve as a database is redundant.
 
-## Another perspective on the design
+# My workflow
 
-MVC architecture
+**Step 1**: Build user interface with Vue \
+**Step 2**: Build mock-server \
+**Step 3**: Testing with `vue-test-utils` and `jest` \
+**Step 4**: Final UI touch up
 
-# Syntax assumption
+# What did I learn?
 
-If you do not pass enough, it will throw Error. If you pass more arguments than required, only the first arguments are used. (**TODO**: Polish this).
+This is my _first_ time writing tests for a Vue application. I used `vue-test-utils` and `jest`. I learnt how to conduct unit testing with each component in the Vue application, and each function in the mock server.
 
-# What is added?
+# Notes
 
-1. The keys will actually expired after a timeout is set on a key.
+## Syntax
+
+1. If the user passes more arguments than required a command, the program will ignore the redundant arguments. For example, `DEL` requires 1 argument. If the user passes 2 arguments (e.g `DEL hello name`), the program will ignore the second argument.
+
+2. The command line is case-sensitive.
+
+## Miscellanous
+
+1. When a timeout is set, the key will be expired. If the user sets the timeout for `key1` as `5`, `key1` will be deleted after 5 seconds.
