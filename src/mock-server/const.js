@@ -23,7 +23,6 @@ const RESULT = {
     INVALID_USAGE: "ERROR: Arguments of command are invalid or not enough",
     EMPTY_SNAPSHOT: "ERROR: There has not been any snapshot yet",
     NOT_SET: "ERROR: Value at key is not a set",
-    EMPTY_SET: "ERROR: Empty set",
 }
 
 export { COMMAND_KEYWORDS, RESULT }

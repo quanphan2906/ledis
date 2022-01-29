@@ -28,7 +28,20 @@ export default {
 		const handleCommandSubmit = ( newCommand ) => {
 			lines.value.push("> " + newCommand);
 			let result = processCommand(newCommand);
-			lines.value.push(result);
+
+			if (Array.isArray(result)) {
+
+				for (let i = 0; i < result.length; i++) {
+					lines.value.push(i + 1 + ") " + result[i]);
+				}
+
+				if (result.length == 0) {
+					lines.value.push("Empty set");
+				}
+
+			} else {
+				lines.value.push(result);
+			}
 		}
 
 		return {

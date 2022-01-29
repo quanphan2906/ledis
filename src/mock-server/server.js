@@ -94,7 +94,7 @@ const getSet = (key) => {
     }
 
     if ( !(key in database) || typeof database[key].value !== "object" ) {
-        return RESULT.EMPTY_SET;
+        return RESULT.KEY_ERROR;
     }
 
     return Array.from(database[key].value);

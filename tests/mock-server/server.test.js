@@ -50,7 +50,7 @@ describe("server test", () => {
     it("SMEMBERS return all members of set", () => {
 
         expect(processCommand("SMEMBERS")).toBe(RESULT.INVALID_USAGE);
-        expect(processCommand("SMEMBERS languages")).toBe(RESULT.EMPTY_SET);
+        expect(processCommand("SMEMBERS languages")).toBe(RESULT.KEY_ERROR);
 
         processCommand("SADD languages Python Java C++");
         expect(processCommand("SMEMBERS languages").sort()).toEqual(["Python", "Java", "C++"].sort());
