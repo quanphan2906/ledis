@@ -5,5 +5,6 @@ module.exports = {
 	},
 	testMatch: [
 		"**/tests/**/*.test.[jt]s?(x)",
+		"**/tests/**/*.spec.[jt]s?(x)",
 	]
 }

@@ -10,7 +10,7 @@ import { ref } from '@vue/reactivity'
 import CommandLine from "./components/CommandLine.vue"
 import Line from "./components/Line.vue"
 
-import { processCommand } from "./mock-database/database"
+import { processCommand } from "./mock-server/server"
 
 export default {
 
