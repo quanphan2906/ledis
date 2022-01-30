@@ -30,7 +30,23 @@ There are two reasons why I save the state of the app into a JS variable instead
 1. I want the mock server to resemble a real server as much as possible, and an app with a back-end server will not save its database live in the front-end.
 2. I have already had a reactive object (`result`) in the `App` component to determine what should be rendered in the `Line` component(s) and when `App` should re-render, so declaring another reactive object to serve as a database is redundant.
 
-# My workflow
+The structure of the mock database is as followed:
+
+```lang-js
+database {
+    key1: {
+        timeOut: Number,
+        value: String | Set,
+    },
+    key2: {
+        timeOut: Number,
+        value: String | Set,
+    },
+    ...
+}
+```
+
+# Workflow
 
 **Step 1**: Build user interface with Vue \
 **Step 2**: Build mock-server \
