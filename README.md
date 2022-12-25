@@ -1,6 +1,28 @@
 # Ledis
 
-A simple, light-weight version of Redis. Built with Vue 3. Check out the app here: https://ledis-quanphan.netlify.app/.
+A simple, light-weight version of Redis, an in-memory data structure store. Built with Vue 3. Check out the app here: https://ledis-quanphan.netlify.app/.
+
+# Usage
+
+The black box at the end of the page is the command line. Type a command, press enter, and the result is displayed in the console (the upper white part).
+
+Here are the list of commands that can be used:
+
+-   SET
+-   GET
+-   SADD
+-   SREM
+-   SMEMBERS
+-   SINTER
+-   KEYS
+-   DEL
+-   EXPIRE
+-   TTL
+-   SAVE
+-   RESTORE
+-   RESET
+
+The arguments of these commands are exactly the same as those of Redis. Hence, the Redis website is a the go-to source of reference of syntax: https://redis.io/commands/
 
 # Design
 
